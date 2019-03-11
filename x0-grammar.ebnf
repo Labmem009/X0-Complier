@@ -1,0 +1,35 @@
+program = FunctionList "main" "(" ")" "{" ConstDeclarationList VarDeclarationList StatementList "}".
+FunctionList = [function FunctionList].
+function = (type | "void") ID "(" ParameterList ")" "{" ConstDeclarationList VarDeclarationList StatementList "}".
+ParameterList = [parameter {"," parameter}].
+parameter = type ID.
+ConstDeclarationList = [ConstDeclarationStat ConstDeclarationList].
+ConstDeclarationStat = "const" type ID "=" ("intNumber" | "doubleNumber" | "true" | "false") ";".
+VarDeclarationList = [VarDeclarationStat VarDeclarationList].
+VarDeclarationStat = type ID {["[" intNumber "]"} ";".
+type = "int" | "char" | "bool" | "double".
+StatementList = [statement StatementList].
+statement = IfStat | WhileStat | ReadStat | WriteStat | CompoundStat | ExpressionStat | ForStat | SwitchStat | BreakStat | ExitStat | ContinueStat | DoWhileStat | RepeatStat | ReturnStat.
+ReturnStat = "return" [ValueExpr] ";".
+IfStat = "if" "(" expression ")" statement [ "else" statement].
+WhileStat = "while" "(" expression ")" statement.
+ReadStat = "read" variable ";".
+WriteStat = "write" expression ";" .
+CompoundStat = "{" StatementList "}".
+ExpressionStat = expression ";" | ";".
+ForStat = "for" "(" expression ";" expression ";" expression ")" statement.
+SwitchStat = "switch" "(" expression ")" "{" {"case" intNumber ":" StatementList} ["default" ":" StatementList] "}".
+BreakStat = "break" ";".
+ExitStat = "exit" "(" intNumber ")" ";".
+ContinueStat = "continue" ";".
+DoWhileStat = "do" "{" StatementList "}" "while" "(" expression ")" ";".
+RepeatStat = "repeat" "{" StatementList "}" "until" "(" expression ")" ";".
+expression = SimpleVariable "=" expression | ValueExpr.
+variable = SimpleVariable ["++" | "--"] | ("++" | "--") SimpleVariable.
+SimpleVariable = ID {"[" expression "]"}.
+ValueExpr = SimpleValue {("&&" | "||" | "XOR") SimpleValue}.
+SimpleValue = odd AdditiveExpr | AdditiveExpr [(">" | "<" | ">=" | "<=" | "==" | "!=") AdditiveExpr].
+AdditiveExpr = ["-"] term {("+"|"-") term}.
+term = factor {("*"|"/"|"%") factor}.
+factor = ["!"] ("(" expression ")"| variable | intNumber | doubleNumber | "true" | "false" | FunctionCall).
+FunctionCall = ID "(" [expression {"," expression}] ")".
